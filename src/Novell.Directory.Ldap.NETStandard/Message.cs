@@ -408,7 +408,7 @@ namespace Novell.Directory.Ldap
                         {
                             if (_conn == null)
                             {
-                                var logger = Logger.Factory.CreateLogger<Message>();
+                                var logger = Logger.Log;
                                 logger.LogError(
                                     "Null connection; creation stack {0}, cleanup stack {1}",
                                     _stackTraceCreation, _stackTraceCleanup);

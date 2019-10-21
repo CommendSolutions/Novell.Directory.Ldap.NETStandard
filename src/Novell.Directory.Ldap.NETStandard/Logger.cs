@@ -1,25 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace Novell.Directory.Ldap
 {
     public static class Logger
     {
-        private static ILoggerFactory _loggerFactory;
-
-        static Logger()
+        public static void Init(IEnumerable<ILoggerProvider> providers)
         {
-            Factory = new LoggerFactory().AddDebug();
-        }
-
-        public static ILoggerFactory Factory
-        {
-            get => _loggerFactory;
-            set
-            {
-                _loggerFactory = value;
-                Init();
-            }
+            Log = LoggerFactory.Create((b) => {
+                foreach (var p in providers) b.AddProvider(p);
+            }).CreateLogger("NOVELL LDAP");
         }
 
         public static ILogger Log { get; private set; }
@@ -27,11 +19,6 @@ namespace Novell.Directory.Ldap
         public static void LogWarning(this ILogger logger, string message, Exception ex)
         {
             logger.LogWarning(message + " - {0}", ex.ToString());
-        }
-
-        private static void Init()
-        {
-            Log = _loggerFactory.CreateLogger("Ldap");
         }
     }
 }
